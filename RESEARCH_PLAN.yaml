@@ -1,0 +1,352 @@
+# Research Plan
+## RAG Knowledge Base with Chat Interface
+
+**Project**: RAG
+**Research Sessions**: 12
+**Generated**: 2024-01-19
+
+---
+
+# Research Domains & Sessions
+
+## Domain 1: DOCS (RAG Architecture & Best Practices)
+
+### Session 1.1: RAG Architecture Patterns
+**Research Question**: What are the proven architectural patterns for production RAG systems?
+
+**Investigation Areas**:
+- Naive RAG vs. Advanced RAG (routing, re-ranking, fusion)
+- Chunking strategies: fixed-size, semantic, recursive
+- Embedding models: OpenAI text-embedding-3-small vs. alternatives
+- Vector database options: pgvector vs. Qdrant vs. Weaviate
+- Prompt engineering for RAG (context formatting, citation requirements)
+
+**Success Criteria**:
+- Document 3+ proven RAG architectures
+- Identify optimal chunk size/overlap for document Q&A
+- Compare pgvector vs. Qdrant performance/cost
+- Define prompt template for source-cited responses
+
+**Output**: `RESEARCH/DOCS/1.1_rag_architecture.md`
+
+---
+
+### Session 1.2: Multi-Format File Parsing
+**Research Question**: How to reliably extract text from 15+ file formats?
+
+**Investigation Areas**:
+- PDF parsing: PyPDF2 vs. pdfplumber vs. unstructured
+- DOCX parsing: python-docx best practices
+- Markdown/code files: best extraction libraries
+- Image OCR: pytesseract vs. cloud alternatives
+- Handling corrupted/malformed files gracefully
+
+**Success Criteria**:
+- Select parser library for each supported format
+- Define error handling for malformed files
+- Benchmark parsing speed for 50MB PDF
+- Document OCR accuracy for images
+
+**Output**: `RESEARCH/DOCS/1.2_file_parsing.md`
+
+---
+
+### Session 1.3: RAG Evaluation & Testing
+**Research Question**: How to measure RAG system accuracy and prevent hallucinations?
+
+**Investigation Areas**:
+- RAG evaluation metrics: faithfulness, answer relevance, citation accuracy
+- Synthetic test data generation for RAG
+- Retrieval evaluation: precision@k, recall, MRR
+- Tools: RAGAS, TruLens, DeepEval
+- Testing edge cases: empty results, irrelevant queries
+
+**Success Criteria**:
+- Define evaluation framework for RAG quality
+- Create test dataset with expected answers
+- Document hallucination detection strategies
+- Specify minimum relevance threshold (0.7 cosine similarity)
+
+**Output**: `RESEARCH/DOCS/1.3_rag_evaluation.md`
+
+---
+
+## Domain 2: PRIOR (FastAPI & Background Tasks)
+
+### Session 2.1: FastAPI Best Practices
+**Research Question**: What are the best practices for production FastAPI applications?
+
+**Investigation Areas**:
+- Project structure: feature-sliced vs. traditional
+- Dependency injection patterns
+- Pydantic v2 for validation
+- WebSocket for streaming chat responses
+- Rate limiting: slowapi vs. starlette-rate-limit
+- Error handling: middleware vs. exception handlers
+
+**Success Criteria**:
+- Define FastAPI project structure compliant with global_instructions.md
+- Select rate limiting library
+- Document WebSocket streaming pattern
+- Specify testing approach for async endpoints
+
+**Output**: `RESEARCH/PRIOR/2.1_fastapi_practices.md`
+
+---
+
+### Session 2.2: Celery for Background Ingestion
+**Research Question**: How to use Celery for async file ingestion with progress tracking?
+
+**Investigation Areas**:
+- Celery with Redis: setup and configuration
+- Task progress tracking via websockets
+- Handling task failures and retries
+- Celery Beat for scheduled cleanup jobs
+- Testing Celery tasks with pytest
+
+**Success Criteria**:
+- Define Celery task for file ingestion
+- Document progress update mechanism
+- Specify retry policy for embedding failures
+- Create test strategy for background tasks
+
+**Output**: `RESEARCH/PRIOR/2.2_celery_ingestion.md`
+
+---
+
+### Session 2.3: PostgreSQL + pgvector Integration
+**Research Question**: How to integrate pgvector with SQLAlchemy for vector similarity search?
+
+**Investigation Areas**:
+- pgvector installation and setup
+- SQLAlchemy custom types for VECTOR columns
+- HNSW index configuration for performance
+- Similarity search queries with cosine distance
+- Migrations with Alembic for vector columns
+
+**Success Criteria**:
+- Define SQLAlchemy models with vector columns
+- Document HNSW index creation
+- Specify similarity search query pattern
+- Create migration strategy for vector DB
+
+**Output**: `RESEARCH/PRIOR/2.3_pgvector_integration.md`
+
+---
+
+## Domain 3: STACK (Frontend & Deployment)
+
+### Session 3.1: React + TypeScript Patterns
+**Research Question**: What are the modern React patterns for file upload and chat interfaces?
+
+**Investigation Areas**:
+- File upload: react-dropzone with progress tracking
+- Chat UI: message list with streaming responses
+- State management: Zustand for auth, upload, chat state
+- Real-time updates: WebSocket vs. Server-Sent Events
+- Component libraries: shadcn/ui best practices
+
+**Success Criteria**:
+- Define React components for upload and chat
+- Document state management with Zustand
+- Specify WebSocket integration pattern
+- Select shadcn/ui components to use
+
+**Output**: `RESEARCH/STACK/3.1_react_patterns.md`
+
+---
+
+### Session 3.2: Docker Compose Development Environment
+**Research Question**: How to structure Docker Compose for local development with hot reload?
+
+**Investigation Areas**:
+- Multi-container setup: backend, frontend, postgres, redis
+- Volume mounts for hot reload
+- Environment variable management
+- Service health checks
+- Production-ready Dockerfile patterns
+
+**Success Criteria**:
+- Define docker-compose.yml for all services
+- Document hot reload configuration
+- Specify service startup order
+- Create production Dockerfile guidelines
+
+**Output**: `RESEARCH/STACK/3.2_docker_compose.md`
+
+---
+
+### Session 3.3: OpenAI API Integration
+**Research Question**: How to integrate OpenAI embeddings and chat with error handling?
+
+**Investigation Areas**:
+- OpenAI Python SDK best practices
+- Embedding generation: batching for efficiency
+- Chat completion with streaming responses
+- Error handling: rate limits, timeouts, retries
+- Cost estimation and monitoring
+
+**Success Criteria**:
+- Define embedding service with batching
+- Document streaming chat implementation
+- Specify retry policy for API failures
+- Create cost estimation formulas
+
+**Output**: `RESEARCH/STACK/3.3_openai_integration.md`
+
+---
+
+## Domain 4: CODEBASE (Testing & Security)
+
+### Session 4.1: Testing Strategy
+**Research Question**: How to achieve 80% backend and 75% frontend coverage efficiently?
+
+**Investigation Areas**:
+- pytest: fixtures, parametrization, async tests
+- FastAPI testing: TestClient vs. httpx
+- SQLAlchemy testing: testcontainers vs. sqlite
+- Vitest for React component testing
+- Playwright for E2E tests
+- Coverage tools: pytest-cov, vitest coverage
+
+**Success Criteria**:
+- Define testing directory structure
+- Document fixture patterns for tests
+- Specify test isolation strategy
+- Create E2E test scenarios
+
+**Output**: `RESEARCH/CODEBASE/4.1_testing_strategy.md`
+
+---
+
+### Session 4.2: Authentication & Security
+**Research Question**: How to implement JWT authentication with security best practices?
+
+**Investigation Areas**:
+- JWT implementation: python-jose vs. fastapi-users
+- Password hashing with bcrypt
+- HTTP-only cookies for token storage
+- CSRF protection
+- Input validation: Pydantic for sanitization
+- Rate limiting for auth endpoints
+
+**Success Criteria**:
+- Define JWT authentication flow
+- Document cookie security settings
+- Specify password hashing parameters
+- Create input validation patterns
+
+**Output**: `RESEARCH/CODEBASE/4.2_auth_security.md`
+
+---
+
+### Session 4.3: File Upload Security
+**Research Question**: How to securely handle file uploads and prevent vulnerabilities?
+
+**Investigation Areas**:
+- File size limits and validation
+- Content-type verification (not just extension)
+- Path traversal prevention
+- Malware scanning options
+- Secure file storage permissions
+- Virus scanning: ClamAV integration?
+
+**Success Criteria**:
+- Define file upload security checklist
+- Document filename sanitization
+- Specify storage permissions
+- Create malware detection strategy (if needed)
+
+**Output**: `RESEARCH/CODEBASE/4.3_upload_security.md`
+
+---
+
+# Research Execution Plan
+
+## Order of Execution (Optimized for Dependencies)
+
+1. **Week 1** (Foundation):
+   - 1.1 RAG Architecture
+   - 1.2 File Parsing
+   - 2.1 FastAPI Best Practices
+
+2. **Week 2** (Backend):
+   - 2.2 Celery Ingestion
+   - 2.3 pgvector Integration
+   - 3.3 OpenAI Integration
+
+3. **Week 3** (Frontend):
+   - 3.1 React Patterns
+   - 3.2 Docker Compose
+   - 4.2 Auth Security
+
+4. **Week 4** (Quality):
+   - 1.3 RAG Evaluation
+   - 4.1 Testing Strategy
+   - 4.3 Upload Security
+
+---
+
+# Success Metrics
+
+## Per-Session Success Criteria
+- Research document created in `RESEARCH/` directory
+- At least 3 viable options documented
+- Recommendation with justification
+- Code examples where applicable
+- Links to authoritative sources
+
+## Overall Research Success
+- All 12 sessions completed
+- RESEARCH_SYNTHESIS.yaml generated
+- No blockers identified for implementation
+- Architectural decisions validated
+
+---
+
+# Research Output Format
+
+Each session produces a markdown file with:
+
+```markdown
+# Research: {Session Title}
+
+## Question
+{Research question}
+
+## Options Explored
+1. **Option A**: {description}
+   - Pros: ...
+   - Cons: ...
+   - Code example: ...
+
+2. **Option B**: {description}
+   - Pros: ...
+   - Cons: ...
+
+## Recommendation
+**Selected**: Option A
+
+**Justification**:
+- T1 (Correctness): ...
+- T2 (Simplicity): ...
+- T3 (Reliability): ...
+
+## Implementation Notes
+- Version requirements
+- Configuration needed
+- Gotchas to avoid
+
+## References
+- [Source 1](url)
+- [Source 2](url)
+```
+
+---
+
+**RESEARCH PLAN VERSION**: 1.0
+**TOTAL SESSIONS**: 12
+**ESTIMATED DURATION**: 4 weeks
+
+This research plan ensures all architectural decisions are grounded in proven practices
+before any implementation code is written.

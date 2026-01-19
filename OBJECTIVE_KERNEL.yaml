@@ -1,0 +1,176 @@
+# Objective Kernel
+## RAG Knowledge Base with Chat Interface
+
+# RESTATEMENT: What We're Building and Why
+
+restatement:
+  what_user_wants: |
+    A self-hosted web application where users can drag-and-drop files of any type
+    (PDF, DOCX, TXT, MD, CSV, JSON, code, images), watch them be processed in
+    real-time, and then ask natural language questions via a chat interface to
+    receive accurate, source-attributed answers grounded in their uploaded documents.
+
+  why_user_wants_it: |
+    Users possess large volumes of unstructured data across multiple file formats
+    and cannot efficiently query, search, or extract insights without manual reading.
+    Existing solutions either: (1) handle limited file types, (2) lack semantic search,
+    or (3) require complex setup without an intuitive interface.
+
+    The user wants a "best practices" RAG implementation that is:
+    - Easy to deploy and use (web interface, not CLI)
+    - Comprehensive (15+ file formats supported)
+    - Reliable (source-cited answers, not hallucinations)
+    - Self-contained (user data privacy, no external training)
+
+# MISSION STATEMENT
+
+mission_statement: |
+  Build a production-ready RAG knowledge base that transforms unstructured documents
+  into an interactive, queryable knowledge graph through semantic vector search and
+  LLM-powered chat, following best practices for security, testing, and code quality,
+  deployable as a self-hosted web application with minimal operational overhead.
+
+# NON-NEGOTIABLES (Must Never Violate)
+
+non_negotiables:
+  n1_no_secrets:
+    description: "No secrets, API keys, or credentials in source code"
+    implementation: "All secrets via environment variables; .env.example provided"
+    violation: "Immediate failure; code rejected until fixed"
+
+  n2_no_manual_markers:
+    description: "No TODO, FIXME, XXX, or similar placeholders in committed code"
+    implementation: "All work completed before commit; use GitHub Issues for tracking"
+    violation: "Code rejected; markers must be resolved or tracked in issues"
+
+  n3_minimal_code:
+    description: "Maximum 50 lines per file (excluding tests and boilerplate)"
+    implementation: "Single-responsibility functions; extract helpers; prefer composition"
+    violation: "File flagged for refactoring; must split or simplify"
+
+# T-WEIGHTS (Trade-off Priorities, Must Sum to 1.0)
+
+t_weights:
+  t1_correctness: 0.35
+    # Rationale: Answers must be accurate and source-cited. Hallucinations or
+    # incorrect citations destroy user trust. Accuracy is the primary value.
+
+  t2_simplicity: 0.30
+    # Rationale: Single-developer project must be maintainable. Complex code
+    # breeds bugs and slows development. Prefer simple solutions over clever ones.
+
+  t3_reliability: 0.25
+    # Rationale: User data must never be lost. System must handle failures
+    # gracefully (network timeouts, API errors, concurrent operations). 99.5%
+    # uptime target means robust error handling.
+
+  t4_extensibility: 0.10
+    # Rationale: MVP first. Design for extensibility (interfaces, modules) but
+    # don't over-engineer. Features like multi-tenancy, advanced RAG techniques,
+    # and integrations are explicitly out of scope for Phase 1.
+
+# SUCCESS METRICS (Verified by Automated Tests)
+
+success_metrics:
+  functional:
+    - upload: "File upload succeeds for 15+ formats, shows progress, completes within 30s"
+    - ingestion: "Files parsed, chunked, embedded, stored in vector DB"
+    - search: "Semantic queries return top-5 relevant chunks within 2 seconds"
+    - chat: "LLM responses include source citations, answer is grounded in docs"
+
+  quality:
+    - coverage_backend: "≥80% code coverage (pytest)"
+    - coverage_frontend: "≥75% code coverage (Vitest)"
+    - e2e_critical_path: "100% of upload→ingest→chat→delete flow tested (Playwright)"
+    - no_secrets: "Zero hardcoded secrets (scanned by truffleHog or similar)"
+
+  performance:
+    - api_latency_p95: "< 200ms for non-chat endpoints"
+    - chat_latency_p95: "< 2 seconds for search + LLM response"
+    - concurrent_users: "10 simultaneous users without degradation"
+
+# TECHNICAL CONSTRAINTS (From CONTEXT.md)
+
+constraints:
+  backend:
+    - "Python 3.11+"
+    - "FastAPI 0.104+ for async API"
+    - "PostgreSQL 15+ with pgvector for vector storage"
+    - "SQLAlchemy 2.0+ for ORM"
+    - "Celery 5.3+ for background tasks"
+    - "Redis 7.0+ for task broker and caching"
+
+  frontend:
+    - "React 18.2+ with TypeScript 5.0+"
+    - "Vite 5.0+ for build tooling"
+    - "Tailwind CSS + shadcn/ui for components"
+    - "Zustand for state management"
+
+  deployment:
+    - "Docker Compose for local development"
+    - "Environment variables for all configuration"
+    - "Nginx reverse proxy for production"
+
+# PROJECT STRUCTURE (Enforced)
+
+project_structure:
+  backend: |
+    backend/
+    ├── app/
+    │   ├── api/           # API routes (≤50 lines per file)
+    │   ├── core/          # Security, config, dependencies
+    │   ├── db/            # Database session
+    │   ├── models/        # SQLAlchemy models
+    │   ├── schemas/       # Pydantic schemas
+    │   ├── services/      # Business logic
+    │   └── tasks/         # Celery tasks
+    ├── tests/             # pytest (80% coverage required)
+    └── requirements.txt
+
+  frontend: |
+    frontend/
+    ├── src/
+    │   ├── components/    # React components (≤50 lines per file)
+    │   ├── pages/         # Page components
+    │   ├── hooks/         # Custom hooks
+    │   ├── stores/        # Zustand stores
+    │   └── types/         # TypeScript types
+    ├── tests/             # Vitest (75% coverage required)
+    └── package.json
+
+# ANTI-PATTERNS (Must Avoid)
+
+anti_patterns:
+  - "God functions: any function > 20 lines is suspicious"
+  - "Deep nesting: > 3 levels of indentation means extract function"
+  - "Magic numbers: all constants defined and named"
+  - "Callback hell: use async/await, not .then() chains"
+  - "Global state: all state via stores/props, not window.*"
+  - "ANY for types: TypeScript strict mode, explicit types"
+  - "try/except with bare except: always catch specific exceptions"
+  - "print() in production: use structured logging"
+
+# GATE CRITERIA (What Must Pass Before Phase 1)
+
+gate_criteria:
+  phase_0_complete:
+    - "PRD.md approved by user (.phase_0_0.APPROVED.flag exists)"
+    - "CONTEXT.md validated (.phase_0_1.VALID.flag exists)"
+    - "OBJECTIVE_KERNEL.yaml approved (.phase_0_2.APPROVED.flag exists)"
+    - "global_instructions.md generated (.phase_0_4.COMPLETE.flag exists)"
+
+  phase_1_entry:
+    - "All Phase 0 flags present"
+    - "Git repository initialized"
+    - ".gitignore configured (excludes .env, __pycache__, node_modules)"
+    - "README.md with setup instructions exists"
+
+---
+
+**KERNEL VERSION**: 1.0
+**LAST UPDATED**: 2024-01-19
+**STATUS**: PENDING APPROVAL
+
+This kernel is the source of truth for all downstream phases. Any ambiguity here
+will propagate as implementation bugs. When in doubt, refer to the MISSION STATEMENT
+and T-WEIGHTS to resolve trade-offs.
